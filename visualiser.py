@@ -31,7 +31,6 @@ speed_button_color = "#DDD888"
 display_color = "#b3e0e5"
 # ------------------------------------------------------------------------------
 
-
 # MODES
 
 sort_mode = False
@@ -93,9 +92,13 @@ binary_tree_text4 = tiny_font.render(" we typically name them the left and right
 binary_tree_text5 = tiny_font.render(".....", False, white)
 
 
-# BST TEXT -------------------------------------------------------------------
 
-add_node_text = small_font.render(str("Add Node"), False, black)
+
+bubble_sort_text1 = tiny_font.render(str("Bubbles"), False, white)
+bubble_sort_text2 = tiny_font.render(str("Bubbles"), False, white)
+bubble_sort_text3 = tiny_font.render(str("Bubbles"), False, white)
+bubble_sort_text4 = tiny_font.render(str("Bubbles"), False, white)
+bubble_sort_text5 = tiny_font.render(str("Bubbles"), False, white)
 
 # --------------------------------------------------------------------------------
 # IMAGES
@@ -120,7 +123,7 @@ redo_sort_button = None
 # glossary btns for collide point
 
 binary_tree_btn = None
-red_black_tree_btn = None
+bubble_sort_btn = None
 graphs_btn = None
 tries_btn = None
 
@@ -539,7 +542,7 @@ def display_algorithm():
 
 def draw_glossary_buttons():
 
-    global binary_tree_btn, red_black_tree_btn, graphs_btn, tries_btn
+    global binary_tree_btn, bubble_sort_btn, graphs_btn, tries_btn
     
 
     gameDisplay.blit(image, (display_width-200, 50))
@@ -553,15 +556,15 @@ def draw_glossary_buttons():
     gameDisplay.blit(binary_tree_label2, (180, 90))
 
 
-    # RED BLACK TREES
+    # BUBBLE SORT
 
     bubble_sort_btn = pygame.draw.rect(gameDisplay, green, [370, 50, 100, 100])
-    bubble_sort_label1 = small_font.render("Red", False, black)
-    bubble_sort_label2 = small_font.render("Black", False, black)
-    bubble_sort_label3 = small_font.render("Tree", False, black)
-    gameDisplay.blit(red_black_tree_label1, (380, 70))
-    gameDisplay.blit(red_black_tree_label2, (380, 90))
-    gameDisplay.blit(red_black_tree_label3, (380, 110))
+    bubble_sort_label1 = small_font.render("Bubble", False, black)
+    bubble_sort_label2 = small_font.render("Sort", False, black)
+    
+    gameDisplay.blit(bubble_sort_label1, (380, 70))
+    gameDisplay.blit(bubble_sort_label2, (380, 90))
+    
 
     # GRAPHS
 
@@ -574,7 +577,6 @@ def draw_glossary_buttons():
     tries_btn = pygame.draw.rect(gameDisplay, green, [770, 50, 100, 100])
     tries_label = small_font.render("Tries", False, black)
     gameDisplay.blit(tries_label, (780, 70))
-
 
 
 
@@ -743,6 +745,14 @@ while global_loop:
                         glossary_screen_text3 = binary_tree_text3
                         glossary_screen_text4 = binary_tree_text4
                         glossary_screen_text5 = binary_tree_text5
+
+
+                    if bubble_sort_btn.collidepoint(pygame.mouse.get_pos()):
+                        glossary_screen_text1 = bubble_sort_text1
+                        glossary_screen_text2 = bubble_sort_text2
+                        glossary_screen_text3 = bubble_sort_text3
+                        glossary_screen_text4 = bubble_sort_text4
+                        glossary_screen_text5 = bubble_sort_text5
                             
         # TEMPORARY TEXT FOR GLOSSARY SCREEN
         
