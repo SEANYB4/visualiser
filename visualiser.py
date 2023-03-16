@@ -2,7 +2,6 @@ import pygame
 import random
 import time
 
-
 # ---------------------------------------------------------------------------
 # INITIALSATIONS
 
@@ -35,7 +34,7 @@ display_color = "#b3e0e5"
 
 sort_mode = False
 glossary_mode = False
-red_black_tree_mode = False
+binary_tree_mode = False
 
 main_menu_btn_width = 250
 main_menu_btn_x = (display_width/2)-(main_menu_btn_width/2)
@@ -91,14 +90,23 @@ binary_tree_text3 = tiny_font.render("Since each element in a binary tree can ha
 binary_tree_text4 = tiny_font.render(" we typically name them the left and right child.", False, white)
 binary_tree_text5 = tiny_font.render(".....", False, white)
 
-
-
-
 bubble_sort_text1 = tiny_font.render(str("Bubbles"), False, white)
 bubble_sort_text2 = tiny_font.render(str("Bubbles"), False, white)
 bubble_sort_text3 = tiny_font.render(str("Bubbles"), False, white)
 bubble_sort_text4 = tiny_font.render(str("Bubbles"), False, white)
 bubble_sort_text5 = tiny_font.render(str("Bubbles"), False, white)
+
+insertion_sort_text1 = tiny_font.render(str("insertion"), False, white)
+insertion_sort_text2 = tiny_font.render(str("insertion"), False, white)
+insertion_sort_text3 = tiny_font.render(str("insertion"), False, white)
+insertion_sort_text4 = tiny_font.render(str("insertion"), False, white)
+insertion_sort_text5 = tiny_font.render(str("Insertion"), False, white)
+
+graph_text1 = tiny_font.render(str("graphs"), False, white)
+graph_text2 = tiny_font.render(str("graphs"), False, white)
+graph_text3 = tiny_font.render(str("graphs"), False, white)
+graph_text4 = tiny_font.render(str("graphs"), False, white)
+graph_text5 = tiny_font.render(str("graphs"), False, white)
 
 # --------------------------------------------------------------------------------
 # IMAGES
@@ -125,7 +133,7 @@ redo_sort_button = None
 binary_tree_btn = None
 bubble_sort_btn = None
 graphs_btn = None
-tries_btn = None
+insertion_sort_btn = None
 
 pygame.display.set_icon(img2)
 
@@ -542,14 +550,13 @@ def display_algorithm():
 
 def draw_glossary_buttons():
 
-    global binary_tree_btn, bubble_sort_btn, graphs_btn, tries_btn
+    global binary_tree_btn, bubble_sort_btn, graphs_btn, insertion_sort_btn
     
-
     gameDisplay.blit(image, (display_width-200, 50))
     
     # BINARY TREES
 
-    binary_tree_btn = pygame.draw.rect(gameDisplay, green, [170, 50, 100, 100])
+    binary_tree_btn = pygame.draw.rect(gameDisplay, green, [170, 50, 120, 120])
     binary_tree_label = small_font.render("Binary", False, black)
     binary_tree_label2 = small_font.render("Tree", False, black)
     gameDisplay.blit(binary_tree_label, (180, 70))
@@ -558,7 +565,7 @@ def draw_glossary_buttons():
 
     # BUBBLE SORT
 
-    bubble_sort_btn = pygame.draw.rect(gameDisplay, green, [370, 50, 100, 100])
+    bubble_sort_btn = pygame.draw.rect(gameDisplay, green, [370, 50, 120, 120])
     bubble_sort_label1 = small_font.render("Bubble", False, black)
     bubble_sort_label2 = small_font.render("Sort", False, black)
     
@@ -568,15 +575,17 @@ def draw_glossary_buttons():
 
     # GRAPHS
 
-    graphs_btn = pygame.draw.rect(gameDisplay, green, [570, 50, 100, 100])
+    graphs_btn = pygame.draw.rect(gameDisplay, green, [570, 50, 120, 120])
     graphs_label = small_font.render("Graphs", False, black)
     gameDisplay.blit(graphs_label, (580, 70))
     
-    # TRIES
+    # insertion_sort
 
-    tries_btn = pygame.draw.rect(gameDisplay, green, [770, 50, 100, 100])
-    tries_label = small_font.render("Tries", False, black)
-    gameDisplay.blit(tries_label, (780, 70))
+    insertion_sort_btn = pygame.draw.rect(gameDisplay, green, [770, 50, 120, 120])
+    insertion_sort_label1 = small_font.render("Insertion", False, black)
+    insertion_sort_label2 = small_font.render("Sort", False, black)
+    gameDisplay.blit(insertion_sort_label1, (780, 70))
+    gameDisplay.blit(insertion_sort_label2, (780, 90))
 
 
 
@@ -736,6 +745,7 @@ while global_loop:
                 if event.type == pygame.MOUSEBUTTONDOWN:
             
                     if glossary_exit_btn.collidepoint(pygame.mouse.get_pos()):
+                        
                         main_menu_status = True
                         glossary_mode = False
 
@@ -753,6 +763,22 @@ while global_loop:
                         glossary_screen_text3 = bubble_sort_text3
                         glossary_screen_text4 = bubble_sort_text4
                         glossary_screen_text5 = bubble_sort_text5
+
+
+                    if insertion_sort_btn.collidepoint(pygame.mouse.get_pos()):
+                        glossary_screen_text1 = insertion_sort_text1
+                        glossary_screen_text2 = insertion_sort_text2
+                        glossary_screen_text3 = insertion_sort_text3
+                        glossary_screen_text4 = insertion_sort_text4
+                        glossary_screen_text5 = insertion_sort_text5
+
+
+                    if graphs_btn.collidepoint(pygame.mouse.get_pos()):
+                        glossary_screen_text1 = graph_text1
+                        glossary_screen_text2 = graph_text2
+                        glossary_screen_text3 = graph_text3
+                        glossary_screen_text4 = graph_text4
+                        glossary_screen_text5 = graph_text5
                             
         # TEMPORARY TEXT FOR GLOSSARY SCREEN
         
