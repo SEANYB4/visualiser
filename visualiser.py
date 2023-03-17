@@ -122,6 +122,7 @@ image = scaled_image
 sort_button1 = None
 sort_button2 = None
 sort_button3 = None
+sort_button4 = None
 speed_button1 = None
 speed_button2 = None
 speed_button3 = None
@@ -154,7 +155,7 @@ algo_step_sound = pygame.mixer.Sound('algo_step.mp3')
 
 block_size = 50
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption("Computer Bestiary")
+pygame.display.set_caption("Visualiser")
 game_exit = True
 algorithm = "insertion"
 speed = 0.01
@@ -400,6 +401,40 @@ def bubble_sort(nums):
     return nums
 
 
+# MERGE SORT
+
+def mergesort(nums):
+    if len(nums) < 2:
+        return nums
+    else:
+        mid = len(nums) // 2
+        first = mergesort(nums[:mid])
+        second = mergesort(nums[mid:])
+        return merge(first, second)
+    
+def merge(first, second):
+    final = []
+    i = 0
+    j = 0
+
+    while i < len(first) and j < len(second):
+        if first[i] < second[j]:
+            final.append(first[i])
+            i += 1
+        else:
+            final.append(second[j])
+            j += 1
+    while i < len(first):
+        final.append(first[i])
+        i += 1
+    while j < len(second):
+        final.append(second[j])
+        j += 1
+
+    return final
+
+        
+
 
 # FUNCTION FOR DRAWING THE CURRENT STATE OF THE LIST TO BE SORTED
 
@@ -424,19 +459,21 @@ def draw_list(list_for_sort):
       display_algorithm()
       pygame.display.update()
 
-def draw_menu():
+def draw_sort_menu():
 
-    global sort_button1, sort_button2, sort_button3, speed_button1, speed_button2, speed_button3, main_menu_btn
+    global sort_button1, sort_button2, sort_button3, sort_button4, speed_button1, speed_button2, speed_button3, main_menu_btn
 
     pygame.draw.rect(gameDisplay, display_color, [display_width-210, 160, 200, 600])
 
     sort_button1 = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 200, 180, 50])
     sort_button2 = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 260, 180, 50])
     sort_button3 = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 320, 180, 50])
-    
-    speed_button1 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 400, 180, 50])
-    speed_button2 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 460, 180, 50])
-    speed_button3 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 520, 180, 50])
+    sort_button4 = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 380, 180, 50])
+
+
+    speed_button1 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 500, 180, 50])
+    speed_button2 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 560, 180, 50])
+    speed_button3 = pygame.draw.rect(gameDisplay, speed_button_color, [display_width - 200, 620, 180, 50])
 
     main_menu_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 700, 180, 50])
 
@@ -446,6 +483,7 @@ def draw_menu():
     insertion_sort_text = small_font.render(str("Insertion Sort"), False, black)
     bubble_sort_text = small_font.render(str("Bubble Sort"), False, black)
     quicksort_text = small_font.render(str("Quicksort Sort"), False, black)
+    merge_sort_text = small_font.render(str("Merge Sort"), False, black)
 
     speed_button1_text = small_font.render(str("Slow"), False, black)
     speed_button2_text = small_font.render(str("Medium"), False, black)
@@ -460,12 +498,13 @@ def draw_menu():
     gameDisplay.blit(insertion_sort_text, (display_width-200, 200))
     gameDisplay.blit(bubble_sort_text, (display_width-200, 260))
     gameDisplay.blit(quicksort_text, (display_width-200, 320))
+    gameDisplay.blit(merge_sort_text, (display_width-200, 380))
 
-    gameDisplay.blit(speed_text, (display_width-200, 360))
+    gameDisplay.blit(speed_text, (display_width-200, 460))
 
-    gameDisplay.blit(speed_button1_text, (display_width-200, 400))
-    gameDisplay.blit(speed_button2_text, (display_width-200, 460))
-    gameDisplay.blit(speed_button3_text, (display_width-200, 520))
+    gameDisplay.blit(speed_button1_text, (display_width-200, 500))
+    gameDisplay.blit(speed_button2_text, (display_width-200, 560))
+    gameDisplay.blit(speed_button3_text, (display_width-200, 620))
 
     gameDisplay.blit(main_menu_text, (display_width-200, 700))
 
@@ -485,12 +524,14 @@ def redo_sort(list_for_sort):
         list_for_sort = bubble_sort(list_for_sort)
     elif algorithm == "quicksort":
         list_for_sort = quicksort(list_for_sort, 0, len(list_for_sort)-1)
+    elif algorithm == "mergesort":
+        list_for_sort = mergesort(list_for_sort)
 
     
     image = scaled_image2
     draw_list(list_for_sort)
-    redo_sort_button = pygame.draw.rect(gameDisplay, menu_button_color, [20, 410, 300, 40])
-    gameDisplay.blit(redo_sort_text,(30, 415))
+    redo_sort_button = pygame.draw.rect(gameDisplay, menu_button_color, [560, 170, 170, 170])
+    gameDisplay.blit(redo_sort_text,(570, 180))
 
 
 
@@ -645,7 +686,7 @@ while global_loop:
     while sort_mode:
 
         display_algorithm()
-        draw_menu()
+        draw_sort_menu()
     
         # EVENT HANDLING
             # event handling
@@ -684,6 +725,11 @@ while global_loop:
                         pygame.mixer.Sound.play(btn_click_sound)
                         print("Quicksort click")
                         algorithm = "quicksort"
+
+                    if sort_button4.collidepoint(pygame.mouse.get_pos()):
+                        pygame.mixer.Sound.play(btn_click_sound)
+                        print("Mergesort click")
+                        algorithm = "mergesort"
 
                     if speed_button1.collidepoint(pygame.mouse.get_pos()):
                         pygame.mixer.Sound.play(btn_click_sound)
