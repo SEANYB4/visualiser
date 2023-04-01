@@ -84,9 +84,14 @@ insertion_sort_algorithm_line6 = tiny_font.render("            j -= 1", False, b
 insertion_sort_algorithm_line7 = tiny_font.render("    arr[j + 1] = key", False, black)
 
 
-# GRAPH TEXT
+# GRAPH SECTION TEXT
 
 graph_display_text_1 = tiny_font.render("....", False, white)
+
+
+# BST SECTION TEXT
+
+bst_display_text_1 = tiny_font.render("....", False, white)
 
 
 # GLOSSARY TEXT ---------------------------------------------------------------
@@ -231,6 +236,12 @@ class BSTNode(object):
         self.draw()
         
     def draw(self):
+
+        global bst_display_text_1
+
+        bst_display_text_1 = tiny_font.render(str("Adding node with value " + str(self.val) + '.'), False, white)
+        pygame.draw.rect(gameDisplay, black, [0, 0, display_width, 60])
+        gameDisplay.blit(bst_display_text_1, (50, 30))
         
         if self.parentx is not None:
             if self.val > self.parentval:
