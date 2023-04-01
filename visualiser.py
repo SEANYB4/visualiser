@@ -189,6 +189,9 @@ glossary_screen_text5 = medium_font.render(str("...."), False, white)
 node_count = 0
 
 
+# main menu animation
+line_x = 0
+
 
 cities = ['Glasgow', 'Manchester', 'London', 'Edinburgh', 'NewCastle', 'York', 'Liverpool', 'Leeds', 'Reading', 'Aberdeen', 'Stirling', 'Durham', 'Birmingham', 'Blackpool', 'Cardiff', 'Dublin', 'Perth', 'Dundee', 'South Hampton', 'Bristol']
 
@@ -541,6 +544,7 @@ def merge(first, second):
 
 def draw_list(list_for_sort):
     gameDisplay.fill(background_color)
+    gameDisplay.blit(image, (display_width-200, 50))
     for i in range(len(list_for_sort)):
       color = list_color
       if i == current_idx:
@@ -555,8 +559,8 @@ def draw_list(list_for_sort):
       elif i == comparison_idx:
           color = blue
       number_text = large_font.render(str(list_for_sort[i]), False, color)
-      gameDisplay.blit(number_text, (((i*80)-5)+20, 40))
-      gameDisplay.blit(image, (display_width-200, 50))
+      gameDisplay.blit(number_text, (((i*80)-5)+20, 300))
+      
       display_algorithm()
       pygame.display.update()
 
@@ -633,15 +637,24 @@ def redo_sort(list_for_sort):
     
     image = scaled_image2
     draw_list(list_for_sort)
-    redo_sort_button = pygame.draw.rect(gameDisplay, menu_button_color, [560, 170, 170, 170])
-    gameDisplay.blit(redo_sort_text,(570, 180))
+    redo_sort_button = pygame.draw.rect(gameDisplay, menu_button_color, [560, 50, 170, 170])
+    gameDisplay.blit(redo_sort_text,(570, 60))
 
 
 
 def display_main_menu():
-    global main_menu_sorting_btn, main_menu_exit_btn, main_menu_glossary_btn, main_menu_BST_btn, main_menu_graph_btn
+    global main_menu_sorting_btn, main_menu_exit_btn, main_menu_glossary_btn, main_menu_BST_btn, main_menu_graph_btn, line_x
 
     gameDisplay.fill(background_color)
+
+
+    
+    if line_x <= display_width:
+        line_x += 10
+    else:
+        line_x = 0
+
+    pygame.draw.line(gameDisplay, black, (0, 300), (line_x, 300), 10)
 
     # BLIT IMAGE
     gameDisplay.blit(image, (display_width-200, 50))
@@ -673,26 +686,26 @@ def display_main_menu():
 
 def display_algorithm():
 
-    pygame.draw.rect(gameDisplay, display_color, [20, 170, 500, 170])
+    pygame.draw.rect(gameDisplay, display_color, [20, 50, 500, 170])
 
     if algorithm == "bubble":
-            gameDisplay.blit(bubble_sort_algorithm, (30, 180))
-            gameDisplay.blit(bubble_sort_algorithm_line1, (30, 200))
-            gameDisplay.blit(bubble_sort_algorithm_line2, (30, 220))
-            gameDisplay.blit(bubble_sort_algorithm_line3, (30, 240))
-            gameDisplay.blit(bubble_sort_algorithm_line4, (30, 260))
-            gameDisplay.blit(bubble_sort_algorithm_line5, (30, 280))
+            gameDisplay.blit(bubble_sort_algorithm, (30, 60))
+            gameDisplay.blit(bubble_sort_algorithm_line1, (30, 80))
+            gameDisplay.blit(bubble_sort_algorithm_line2, (30, 100))
+            gameDisplay.blit(bubble_sort_algorithm_line3, (30, 120))
+            gameDisplay.blit(bubble_sort_algorithm_line4, (30, 140))
+            gameDisplay.blit(bubble_sort_algorithm_line5, (30, 160))
 
     elif algorithm == "insertion":
 
-            gameDisplay.blit(insertion_sort_algorithm, (30, 180))
-            gameDisplay.blit(insertion_sort_algorithm_line1, (30, 200))
-            gameDisplay.blit(insertion_sort_algorithm_line2, (30, 220))
-            gameDisplay.blit(insertion_sort_algorithm_line3, (30, 240))
-            gameDisplay.blit(insertion_sort_algorithm_line4, (30, 260))
-            gameDisplay.blit(insertion_sort_algorithm_line5, (30, 280))
-            gameDisplay.blit(insertion_sort_algorithm_line6, (30, 300))
-            gameDisplay.blit(insertion_sort_algorithm_line7, (30, 320))
+            gameDisplay.blit(insertion_sort_algorithm, (30, 60))
+            gameDisplay.blit(insertion_sort_algorithm_line1, (30, 80))
+            gameDisplay.blit(insertion_sort_algorithm_line2, (30, 100))
+            gameDisplay.blit(insertion_sort_algorithm_line3, (30, 120))
+            gameDisplay.blit(insertion_sort_algorithm_line4, (30, 140))
+            gameDisplay.blit(insertion_sort_algorithm_line5, (30, 160))
+            gameDisplay.blit(insertion_sort_algorithm_line6, (30, 180))
+            gameDisplay.blit(insertion_sort_algorithm_line7, (30, 200))
 
 
 def draw_glossary_buttons():
@@ -767,7 +780,10 @@ while global_loop:
 
     main_menu_status = True
 
+
     while main_menu_status:
+        
+
         display_main_menu()
         # EVENT HANDLING
         # event handling
