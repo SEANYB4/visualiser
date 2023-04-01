@@ -45,6 +45,7 @@ main_menu_exit_btn = None
 main_menu_glossary_btn = None
 main_menu_BST_btn = None
 main_menu_graph_btn = None
+main_menu_red_black_trees_btn = None
 
 # -------------------------------------------------------------------------------
 
@@ -547,14 +548,14 @@ def draw_list(list_for_sort):
       elif i == comparison_idx:
           color = blue
       height = (list_for_sort[i]*10)
-      pygame.draw.rect(gameDisplay, color, [(i*80), display_height-height, block_size, height])
+      pygame.draw.rect(gameDisplay, color, [(i*80)+20, display_height-height, block_size, height])
       color = black
       if i == current_idx:
           color = green
       elif i == comparison_idx:
           color = blue
       number_text = large_font.render(str(list_for_sort[i]), False, color)
-      gameDisplay.blit(number_text, ((i*80)+15, 40))
+      gameDisplay.blit(number_text, (((i*80)-5)+20, 40))
       gameDisplay.blit(image, (display_width-200, 50))
       display_algorithm()
       pygame.display.update()
@@ -578,7 +579,8 @@ def draw_sort_menu():
     main_menu_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width - 200, 700, 180, 50])
 
     algorithm_text = medium_font.render(str("Algorithm:"), False, black)
-    speed_text = medium_font.render(str("Speed:"), False, black)
+    speed_text1 = medium_font.render(str("Visualiser"), False, black)
+    speed_text2 = medium_font.render(str("Speed:"), False, black)
 
     insertion_sort_text = small_font.render(str("Insertion Sort"), False, black)
     bubble_sort_text = small_font.render(str("Bubble Sort"), False, black)
@@ -600,7 +602,8 @@ def draw_sort_menu():
     gameDisplay.blit(quicksort_text, (display_width-200, 320))
     gameDisplay.blit(merge_sort_text, (display_width-200, 380))
 
-    gameDisplay.blit(speed_text, (display_width-200, 460))
+    gameDisplay.blit(speed_text1, (display_width-200, 440))
+    gameDisplay.blit(speed_text2, (display_width-200, 460))
 
     gameDisplay.blit(speed_button1_text, (display_width-200, 500))
     gameDisplay.blit(speed_button2_text, (display_width-200, 560))
@@ -643,25 +646,28 @@ def display_main_menu():
     # BLIT IMAGE
     gameDisplay.blit(image, (display_width-200, 50))
 
-    main_menu_sorting_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 300, main_menu_btn_width, 50])
+    main_menu_sorting_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 200, main_menu_btn_width, 50])
     main_menu_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 700, main_menu_btn_width, 50])
     main_menu_glossary_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 600, main_menu_btn_width, 50])
-    main_menu_BST_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 400, main_menu_btn_width, 50])
+    main_menu_BST_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 300, main_menu_btn_width, 50])
     main_menu_graph_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 500, main_menu_btn_width, 50])
+    main_menu_red_black_trees_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 400, main_menu_btn_width, 50])
 
-    main_menu_title_text = medium_font.render(str("Main Menu"), False, black)
+    main_menu_title_text = large_font.render(str("Main Menu"), False, black)
     sorting_text = small_font.render(str("Sorting Algorithms"), False, black)
     glossary_text = small_font.render(str("Glossary"), False, black)
     exit_text = small_font.render(str("Exit"), False, black)
     bst_text = small_font.render(str("Binary Trees"), False, black)
     graph_text = small_font.render(str("Graphs"), False, black)
+    rbt_text = small_font.render(str("Red Black Trees"), False, black)
     
-    gameDisplay.blit(main_menu_title_text, ((display_width/2)-100, 100))
-    gameDisplay.blit(sorting_text, (main_menu_btn_x, 300))
-    gameDisplay.blit(graph_text, (main_menu_btn_x, 500))
-    gameDisplay.blit(glossary_text, (main_menu_btn_x, 600))
-    gameDisplay.blit(bst_text, (main_menu_btn_x, 400))
-    gameDisplay.blit(exit_text, (main_menu_btn_x, 700))
+    gameDisplay.blit(main_menu_title_text, ((display_width/2)-135, 80))
+    gameDisplay.blit(sorting_text, (main_menu_btn_x + 10, 212))
+    gameDisplay.blit(graph_text, (main_menu_btn_x + 10, 512))
+    gameDisplay.blit(glossary_text, (main_menu_btn_x + 10, 612))
+    gameDisplay.blit(bst_text, (main_menu_btn_x + 10, 312))
+    gameDisplay.blit(rbt_text, (main_menu_btn_x + 10, 412))
+    gameDisplay.blit(exit_text, (main_menu_btn_x + 10, 712))
     
     pygame.display.update()
 
