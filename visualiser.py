@@ -35,6 +35,7 @@ display_color = "#b3e0e5"
 sort_mode = False
 glossary_mode = False
 binary_tree_mode = False
+graph_mode = False
 
 main_menu_btn_width = 250
 main_menu_btn_x = (display_width/2)-(main_menu_btn_width/2)
@@ -82,6 +83,11 @@ insertion_sort_algorithm_line6 = tiny_font.render("            j -= 1", False, b
 insertion_sort_algorithm_line7 = tiny_font.render("    arr[j + 1] = key", False, black)
 
 
+# GRAPH TEXT
+
+graph_display_text_1 = tiny_font.render("....", False, white)
+
+
 # GLOSSARY TEXT ---------------------------------------------------------------
 
 binary_tree_text1 = tiny_font.render("Binary Tree is defined as a tree data", False, white)
@@ -90,11 +96,11 @@ binary_tree_text3 = tiny_font.render("Since each element in a binary tree can ha
 binary_tree_text4 = tiny_font.render(" we typically name them the left and right child.", False, white)
 binary_tree_text5 = tiny_font.render(".....", False, white)
 
-bubble_sort_text1 = tiny_font.render(str("Bubbles"), False, white)
-bubble_sort_text2 = tiny_font.render(str("Bubbles"), False, white)
-bubble_sort_text3 = tiny_font.render(str("Bubbles"), False, white)
-bubble_sort_text4 = tiny_font.render(str("Bubbles"), False, white)
-bubble_sort_text5 = tiny_font.render(str("Bubbles"), False, white)
+bubble_sort_text1 = tiny_font.render(str("Bubble Sort is the simplest sorting algorithm   "), False, white)
+bubble_sort_text2 = tiny_font.render(str("that works by repeatedly swapping the adjacent"), False, white)
+bubble_sort_text3 = tiny_font.render(str("elements if they are in the wrong order."), False, white)
+bubble_sort_text4 = tiny_font.render(str(" This algorithm is not suitable for large data sets as its "), False, white)
+bubble_sort_text5 = tiny_font.render(str("average and worst-case time complexity is quite high."), False, white)
 
 insertion_sort_text1 = tiny_font.render(str("insertion"), False, white)
 insertion_sort_text2 = tiny_font.render(str("insertion"), False, white)
@@ -108,6 +114,17 @@ graph_text3 = tiny_font.render(str("graphs"), False, white)
 graph_text4 = tiny_font.render(str("graphs"), False, white)
 graph_text5 = tiny_font.render(str("graphs"), False, white)
 
+merge_sort_text1 = tiny_font.render(str("merge"), False, white)
+merge_sort_text2 = tiny_font.render(str("merge"), False, white)
+merge_sort_text3 = tiny_font.render(str("merge"), False, white)
+merge_sort_text4 = tiny_font.render(str("merge"), False, white)
+merge_sort_text5 = tiny_font.render(str("merge"), False, white)
+
+quick_sort_text1 = tiny_font.render(str("quick"), False, white)
+quick_sort_text2 = tiny_font.render(str("quick"), False, white)
+quick_sort_text3 = tiny_font.render(str("quick"), False, white)
+quick_sort_text4 = tiny_font.render(str("quick"), False, white)
+quick_sort_text5 = tiny_font.render(str("quick"), False, white)
 # --------------------------------------------------------------------------------
 # IMAGES
 
@@ -135,6 +152,8 @@ binary_tree_btn = None
 bubble_sort_btn = None
 graphs_btn = None
 insertion_sort_btn = None
+merge_sort_btn = None
+quick_sort_btn = None
 
 pygame.display.set_icon(img2)
 
@@ -167,6 +186,10 @@ glossary_screen_text4 = medium_font.render(str("...."), False, white)
 glossary_screen_text5 = medium_font.render(str("...."), False, white)
 
 node_count = 0
+
+
+
+cities = ['Glasgow', 'Manchester', 'London', 'Edinburgh', 'NewCastle', 'York', 'Liverpool', 'Leeds', 'Reading', 'Aberdeen', 'Stirling', 'Durham', 'Birmingham', 'Blackpool', 'Cardiff', 'Dublin', 'Perth', 'Dundee', 'South Hampton', 'Bristol']
 
 # -----------------------------------------------------------------------------
 # CLASSES
@@ -318,6 +341,83 @@ class BSTNode(object):
                 return
             
         
+
+#  GRAPH
+
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+        self.cords = {}
+        self.draw()
+    
+    def add_edge(self, u, v):
+        global graph_display_text_1
+        graph_display_text_1 = tiny_font.render(str("Adding edge bewteen " + str(u) + ' and ' + str(v) + '.'), False, white)
+        if u in self.graph:
+            self.graph[u].add(v)
+        else:
+            self.graph[u] = set()
+            
+            self.cords[u] = (random.randrange(100, display_width-100), random.randrange(100, display_height-100))
+            self.graph[u].add(v)
+
+        if v in self.graph:
+            self.graph[v].add(u)
+        else:
+            self.graph[v] = set()
+            
+            self.cords[v] = (random.randrange(100, display_width-100), random.randrange(100, display_height-100))
+            self.graph[v].add(u)
+
+        self.draw()
+
+
+    def draw(self):
+
+        gameDisplay.fill(background_color)
+
+        pygame.draw.rect(gameDisplay, black, [0, 0, display_width, 60])
+        gameDisplay.blit(graph_display_text_1, (50, 30))
+
+        for i in self.cords:
+            for j in self.graph[i]:
+                pygame.draw.line(gameDisplay, black, (self.cords[i][0], self.cords[i][1]), (self.cords[j][0], self.cords[j][1]), 5)
+            
+        for i in self.cords:
+            pygame.draw.circle(gameDisplay, white, (self.cords[i][0], self.cords[i][1]), 30)
+
+            node_text = tiny_font.render(str(i), False, black)
+            gameDisplay.blit(node_text, (self.cords[i][0]-30, self.cords[i][1]-10))
+
+            
+
+
+
+        # BUTTONS
+
+            add_node_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 600, 150, 50])
+            add_node_text = small_font.render(str("Add Node"), False, black)
+            gameDisplay.blit(add_node_text, (display_width-165, 610))
+
+            graph_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 700, 150, 50])
+            main_menu_text = small_font.render(str("Main menu"), False, black)
+            gameDisplay.blit(main_menu_text, (display_width-165, 710))
+
+
+
+        pygame.display.update()
+
+
+
+
+
+
+
+
+
+
+
 # -------------------------------------------------------------------------------
 # FUNCTIONS
 
@@ -591,7 +691,7 @@ def display_algorithm():
 
 def draw_glossary_buttons():
 
-    global binary_tree_btn, bubble_sort_btn, graphs_btn, insertion_sort_btn
+    global binary_tree_btn, bubble_sort_btn, graphs_btn, insertion_sort_btn, merge_sort_btn, quick_sort_btn
     
     gameDisplay.blit(image, (display_width-200, 50))
     
@@ -629,6 +729,24 @@ def draw_glossary_buttons():
     gameDisplay.blit(insertion_sort_label2, (780, 90))
 
 
+    # merge sort
+
+    merge_sort_btn = pygame.draw.rect(gameDisplay, green, [170, 630, 120, 120])
+    merge_sort_label1 = small_font.render("Merge", False, black)
+    merge_sort_label2 = small_font.render("Sort", False, black)
+    gameDisplay.blit(merge_sort_label1, [180, 650])
+    gameDisplay.blit(merge_sort_label2, [180, 670])
+
+
+    # insertion sort
+
+    quick_sort_btn = pygame.draw.rect(gameDisplay, green, [370, 630, 120, 120])
+    quick_sort_label1 = small_font.render("Quick", False, black)
+    quick_sort_label2 = small_font.render("Sort", False, black)
+    gameDisplay.blit(quick_sort_label1, [380, 650])
+    gameDisplay.blit(quick_sort_label2, [380, 670])
+
+
 
 # INITIAL SETUP
 
@@ -657,21 +775,29 @@ while global_loop:
                         main_menu_status = False
                         sort_mode = True
                         pygame.mixer.Sound.play(btn_click_sound)
-                        pygame.mixer.Sound.play(loaded_sound)
+                        # pygame.mixer.Sound.play(loaded_sound)
                         redo_sort(list_for_sort)
 
                     if main_menu_glossary_btn.collidepoint(pygame.mouse.get_pos()):
                         main_menu_status = False
                         glossary_mode = True
                         pygame.mixer.Sound.play(btn_click_sound)
-                        pygame.mixer.Sound.play(loaded_sound)
+                        # pygame.mixer.Sound.play(loaded_sound)
 
                     if main_menu_BST_btn.collidepoint(pygame.mouse.get_pos()):
                         main_menu_status = False
                         binary_tree_mode = True
                         
                         pygame.mixer.Sound.play(btn_click_sound)
-                        pygame.mixer.Sound.play(loaded_sound)
+                        # # pygame.mixer.Sound.play(loaded_sound)
+                        
+
+
+                    if main_menu_graph_btn.collidepoint(pygame.mouse.get_pos()):
+                        main_menu_status = False
+                        graph_mode = True
+                        pygame.mixer.Sound.play(btn_click_sound)
+
 
                     if main_menu_exit_btn.collidepoint(pygame.mouse.get_pos()):
                         pygame.mixer.Sound.play(btn_click_sound)
@@ -697,7 +823,7 @@ while global_loop:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        loaded_sound.play()
+                        # loaded_sound.play()
                         redo_sort(list_for_sort)
 
                     if event.key == pygame.K_q:
@@ -708,7 +834,7 @@ while global_loop:
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if redo_sort_button.collidepoint(pygame.mouse.get_pos()):
-                        loaded_sound.play()
+                        # loaded_sound.play()
                         redo_sort(list_for_sort)
 
                     if sort_button1.collidepoint(pygame.mouse.get_pos()):
@@ -781,7 +907,7 @@ while global_loop:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        loaded_sound.play()
+                        # loaded_sound.play()
                         redo_sort(list_for_sort)
 
                     if event.key == pygame.K_q:
@@ -825,6 +951,22 @@ while global_loop:
                         glossary_screen_text3 = graph_text3
                         glossary_screen_text4 = graph_text4
                         glossary_screen_text5 = graph_text5
+
+
+                    if merge_sort_btn.collidepoint(pygame.mouse.get_pos()):
+                        glossary_screen_text1 = merge_sort_text1
+                        glossary_screen_text2 = merge_sort_text2
+                        glossary_screen_text3 = merge_sort_text3
+                        glossary_screen_text4 = merge_sort_text4
+                        glossary_screen_text5 = merge_sort_text5
+
+
+                    if quick_sort_btn.collidepoint(pygame.mouse.get_pos()):
+                        glossary_screen_text1 = quick_sort_text1
+                        glossary_screen_text2 = quick_sort_text2
+                        glossary_screen_text3 = quick_sort_text3
+                        glossary_screen_text4 = quick_sort_text4
+                        glossary_screen_text5 = quick_sort_text5
                             
         # TEMPORARY TEXT FOR GLOSSARY SCREEN
         
@@ -839,6 +981,7 @@ while global_loop:
     blank = True
 
     while binary_tree_mode:
+        
 
         if blank == True:
  
@@ -875,6 +1018,43 @@ while global_loop:
 
                         root.insert(random.randrange(0, 101))
 
+        pygame.display.update()
+    while graph_mode:
+        graph_display_text_1 = tiny_font.render(str('.....'), False, white)
+
+        if blank == True:
+ 
+            gameDisplay.fill(background_color)
+            root = Graph()
+
+            # BUTTONS
+
+            add_node_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 600, 150, 50])
+            add_node_text = small_font.render(str("Add Node"), False, black)
+            gameDisplay.blit(add_node_text, (display_width-165, 610))
+
+            graph_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 700, 150, 50])
+            main_menu_text = small_font.render(str("Main menu"), False, black)
+            gameDisplay.blit(main_menu_text, (display_width-165, 710))
+
+            blank = False
+
+        # EVENT HANDLING
+            # event handling
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_exit = True
+                    pygame.quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if graph_exit_btn.collidepoint(pygame.mouse.get_pos()):
+                        
+                        main_menu_status = True
+                        graph_mode = False
+
+                    if add_node_btn.collidepoint(pygame.mouse.get_pos()):
+
+                        root.add_edge(cities[random.randrange(0, len(cities))], cities[random.randrange(0, len(cities))])
 
         pygame.display.update()                                 
         
