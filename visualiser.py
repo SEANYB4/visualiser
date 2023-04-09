@@ -36,6 +36,7 @@ sort_mode = False
 glossary_mode = False
 binary_tree_mode = False
 graph_mode = False
+red_black_mode = False
 
 main_menu_btn_width = 250
 main_menu_btn_x = (display_width/2)-(main_menu_btn_width/2)
@@ -102,6 +103,16 @@ binary_tree_text3 = tiny_font.render("Since each element in a binary tree can ha
 binary_tree_text4 = tiny_font.render(" we typically name them the left and right child.", False, white)
 binary_tree_text5 = tiny_font.render(".....", False, white)
 
+
+rb_tree_text1 = tiny_font.render("A red-black tree is a kind of self-balancing binary search tree. ", False, white)
+rb_tree_text2 = tiny_font.render("Each node stores an extra bit, which we will call the color, red or black.", False, white)
+rb_tree_text3 = tiny_font.render("The color ensures that the tree remains approximately balanced during insertions and deletions.", False, white)
+rb_tree_text4 = tiny_font.render("When the tree is modified, the new tree is rearranged and repainted to restore the coloring properties that", False, white)
+rb_tree_text5 = tiny_font.render(" constrain how unbalanced the tree can become in the worst case.", False, white)
+rb_tree_text6 = tiny_font.render("Red black trees always have worst-case O(log(n)) insertions, deletions", False, white)
+rb_tree_text7 = tiny_font.render(", lookups and rearrangements.", False, white)
+
+
 bubble_sort_text1 = tiny_font.render(str("Bubble Sort is the simplest sorting algorithm   "), False, white)
 bubble_sort_text2 = tiny_font.render(str("that works by repeatedly swapping the adjacent"), False, white)
 bubble_sort_text3 = tiny_font.render(str("elements if they are in the wrong order."), False, white)
@@ -140,6 +151,17 @@ scaled_image = pygame.transform.scale(img1, (100, 100))
 img2 = pygame.image.load('24224.png')
 scaled_image2 = pygame.transform.scale(img2, (100, 100))
 image = scaled_image
+
+
+
+# TITLE
+
+title_image = pygame.image.load('test2.png')
+scaled_title = pygame.transform.scale(title_image, (400, 200))
+
+
+
+# ---------------------------------------------------------------------------------
 
 # BUTTONS FOR COLLIDEPOINTS
 sort_button1 = None
@@ -195,10 +217,27 @@ node_count = 0
 
 
 # main menu animation
-line_x = 0
+main_menu_line_x = 0
+main_menu_line_y = 0
 
+
+line_1_y = 300
+line_2_x = 500
 
 cities = ['Glasgow', 'Manchester', 'London', 'Edinburgh', 'NewCastle', 'York', 'Liverpool', 'Leeds', 'Reading', 'Aberdeen', 'Stirling', 'Durham', 'Birmingham', 'Blackpool', 'Cardiff', 'Dublin', 'Perth', 'Dundee', 'South Hampton', 'Bristol']
+
+
+
+
+def print_tree(node, lines, level=0):
+    if node.val != 0:
+        print_tree(node.right, lines, level + 1)
+        lines.append(
+            "-" * 4 * level + "> " + str(node.val) + " " + ("r" if node.red else "b")
+        )
+        print_tree(node.left, lines, level + 1)
+
+
 
 # -----------------------------------------------------------------------------
 # CLASSES
@@ -221,7 +260,7 @@ class BSTNode(object):
         
         
 
-        # -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
+        
 
     def __init__(self, val=None, parentx=None, parenty=None, parentval = None):
        
@@ -262,7 +301,7 @@ class BSTNode(object):
 
                 self.y = self.parenty + 50
 
-    # X COORDINATES FOR LEVEL 2
+        # X COORDINATES FOR LEVEL 2
         elif self.y < 240:
 
             if self.parentx is not None:
@@ -355,10 +394,327 @@ class BSTNode(object):
                 node_count += 1
                 return
             
+
+# RB TREES
+
+class RBNode:
+    def __init__(self, val):
+        self.red = False
+        self.parent = None
+        self.val = val
+        self.left = None
+        self.right = None
+        self.x = None
+        self.y = None
+
+
+class RBTree:
+    def __init__(self):
+        self.nil = RBNode(0)
+        self.nil.red = False
+        self.nil.left = None
+        self.nil.right = None
+        self.root = self.nil
+
+    def insert(self, val):
+        # Ordinary Binary Search Insertion
+        new_node = RBNode(val)
+        new_node.parent = None
+        new_node.left = self.nil
+        new_node.right = self.nil
+        new_node.red = True  # new node must be red
+
+        parent = None
+        current = self.root
+        while current != self.nil:
+            parent = current
+            if new_node.val < current.val:
+                current = current.left
+            elif new_node.val > current.val:
+                current = current.right
+            else:
+                return
+
+        # Set the parent and insert the new node
+        new_node.parent = parent
         
 
-#  GRAPH
 
+        if parent == None:
+            self.root = new_node
+            new_node.x = display_width/2
+            new_node.y = 100
+
+        elif new_node.val < parent.val:
+            parent.left = new_node
+            new_node.x = parent.x - ((display_height/new_node.parent.y)*15)
+            new_node.y = parent.y + 50
+        else:
+            parent.right = new_node
+            new_node.x = parent.x + ((display_height/new_node.parent.y)*15)
+            new_node.y = parent.y + 50
+
+
+
+
+
+        # Fix the tree
+        self.fix_insert(new_node)
+        gameDisplay.fill(background_color)
+        draw_rb_menu()
+        self.draw_tree(self.root)
+                
+        pygame.display.update()
+
+    def fix_insert(self, new_node):
+        while new_node != self.root and new_node.parent.red:
+            if new_node.parent == new_node.parent.parent.right:
+                u = new_node.parent.parent.left  # uncle
+                if u.red:
+                    u.red = False
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    new_node = new_node.parent.parent
+                else:
+                    if new_node == new_node.parent.left:
+                        new_node = new_node.parent
+                        self.rotate_right(new_node)
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    self.rotate_left(new_node.parent.parent)
+            else:
+                u = new_node.parent.parent.right  # uncle
+
+                if u.red:
+                    u.red = False
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    new_node = new_node.parent.parent
+                else:
+                    if new_node == new_node.parent.right:
+                        new_node = new_node.parent
+                        self.rotate_left(new_node)
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    self.rotate_right(new_node.parent.parent)
+
+
+
+        self.root.red = False
+
+    def exists(self, val):
+        curr = self.root
+        while curr != self.nil and val != curr.val:
+            if val < curr.val:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return curr
+    
+
+
+    def draw_tree(self, current):
+
+    
+        if (current is None) or current == self.nil:
+            return
+        
+        
+
+        # choose color
+        color = black
+        if current.red:
+            color = red
+
+        # draw connections
+        if current.right is not None and current.right != self.nil:
+            pygame.draw.line(gameDisplay, black, (current.x, current.y), (current.right.x, current.right.y), 5)
+
+        if current.left is not None and current.left != self.nil:
+            pygame.draw.line(gameDisplay, black, (current.x, current.y), (current.left.x, current.left.y), 5)
+        
+        # draw circle
+        pygame.draw.circle(gameDisplay, color, (current.x, current.y), 20)
+
+        # draw value
+        node_val = tiny_font.render(str(current.val), False, white)
+        gameDisplay.blit(node_val, (current.x, current.y))
+
+        # if (current.left is not None) and (current.left is not self.nil):
+        self.draw_tree(current.left)
+
+        # if (current.right is not None) and (current.left is not self.nil):
+        self.draw_tree(current.right)
+
+
+
+    def move_nodes_after_left_rotation(self, x, y):
+
+        if x == None:
+            return
+        else:
+            self.move_nodes_down_left_rotation(x)
+            
+        if y == None:
+            return
+        else:
+            
+            self.move_nodes_up_left_rotation(y, first_rotation=True)
+
+
+
+    def move_nodes_up_left_rotation(self, y, first_rotation=False):
+        if y == None:
+            return
+        
+        if y.parent is not None:
+            if y is not self.root:
+                y.y = y.parent.y + 50
+            if y.val > y.parent.val:
+                y.x = y.parent.x + ((display_height/y.parent.y)*15)
+            else:
+                y.x = y.parent.x - ((display_height/y.parent.y)*15)
+        self.move_nodes_up_left_rotation(y.right)
+        if first_rotation == False:
+            self.move_nodes_up_left_rotation(y.left)
+    
+    def move_nodes_down_left_rotation(self, x):
+        if x == None:
+            return
+        
+        if x.parent is not None:
+            if x is not self.root:
+                x.y = x.parent.y + 50
+            if x.val > x.parent.val:
+                x.x = x.parent.x + ((display_height/x.parent.y)*15)
+            else:
+                x.x = x.parent.x - ((display_height/x.parent.y)*15)
+        self.move_nodes_down_left_rotation(x.left)
+        self.move_nodes_down_left_rotation(x.right)
+
+
+    def move_nodes_up_right_rotation(self, y, first_rotation=False):
+        if y == None:
+            return
+        
+        if y.parent is not None:
+            if y is not self.root:
+                y.y = y.parent.y + 50
+            if y.val > y.parent.val:   
+                y.x = y.parent.x + ((display_height/y.parent.y)*15)
+            else:
+                y.x = y.parent.x - ((display_height/y.parent.y)*15)
+
+
+        self.move_nodes_up_right_rotation(y.left)
+        if first_rotation == False:
+            self.move_nodes_up_right_rotation(y.right)
+    
+    def move_nodes_down_right_rotation(self, x):
+        if x == None:
+            return
+        if x.parent is not None:
+            if x is not self.root:
+                x.y = x.parent.y + 50
+            if x.val > x.parent.val:     
+                x.x = x.parent.x + ((display_height/x.parent.y)*15)
+            else:
+                x.x = x.parent.x - ((display_height/x.parent.y)*15)
+        self.move_nodes_down_right_rotation(x.right)
+        self.move_nodes_down_right_rotation(x.left)
+
+    def move_nodes_after_right_rotation(self, x, y):
+
+        if x == None:
+            return
+        else:
+            self.move_nodes_down_right_rotation(x)
+            
+        if y == None:
+            return
+        else:
+            
+            self.move_nodes_up_right_rotation(y, first_rotation=True)
+            
+        
+        
+        
+
+
+    # rotate left at node x
+    def rotate_left(self, x):
+        print('rotate left' + str(x.val))
+        y = x.right
+        # switch coordinates
+        y.x = x.x
+        y.y = y.y
+        x.right = y.left
+        if y.left != self.nil:
+            y.left.parent = x
+            
+        y.parent = x.parent
+        if x.parent == None:
+            self.root = y
+        elif x == x.parent.left:
+            x.parent.left = y
+        else:
+            x.parent.right = y
+        y.left = x
+        
+        x.parent = y
+        self.move_nodes_after_left_rotation(x, y)
+
+
+# HAK        
+        self.root.y = 100
+        self.root.left.x = 200
+        self.root.right.x = 1000
+        self.root.right.left.x = 900
+        self.root.right.right.x = 1100
+        self.root.left.left.x = 100
+        self.root.left.right.x = 300
+
+    # rotate right at node x
+    def rotate_right(self, x):
+        print('rotate right' + str(x.val))
+        y = x.left
+        y.x = x.x
+        y.y = y.y
+        x.left = y.right
+        if y.right != self.nil:
+            y.right.parent = x
+
+        y.parent = x.parent
+        if x.parent == None:
+            self.root = y
+        elif x == x.parent.right:
+            x.parent.right = y
+        else:
+            x.parent.left = y
+        y.right = x
+        
+        x.parent = y
+        self.move_nodes_after_right_rotation(x, y)
+
+# HAK
+
+        self.root.y = 100
+        self.root.left.x = 200
+        self.root.right.x = 1000
+        self.root.right.left.x = 900
+        self.root.right.right.x = 1100
+        self.root.left.left.x = 100
+        self.root.left.right.x = 300
+
+    def __repr__(self):
+        lines = []
+        print_tree(self.root, lines)
+        return "\n".join(lines)
+
+
+     
+
+#  GRAPH
 
 class Graph:
     def __init__(self):
@@ -654,21 +1010,34 @@ def redo_sort(list_for_sort):
 
 
 def display_main_menu():
-    global main_menu_sorting_btn, main_menu_exit_btn, main_menu_glossary_btn, main_menu_BST_btn, main_menu_graph_btn, line_x
+    global main_menu_sorting_btn, main_menu_exit_btn, main_menu_glossary_btn, main_menu_BST_btn, main_menu_graph_btn, main_menu_line_x, main_menu_line_y, main_menu_red_black_trees_btn, line_1_y, line_2_x
 
     gameDisplay.fill(background_color)
 
 
     
-    if line_x <= display_width:
-        line_x += 10
+    if main_menu_line_x <= display_width:
+        main_menu_line_x += 10
     else:
-        line_x = 0
+        main_menu_line_x = 0
+        line_1_y = random.randrange(10, display_height - 100)
 
-    pygame.draw.line(gameDisplay, black, (0, 300), (line_x, 300), 10)
+
+    if main_menu_line_y <= display_height:
+        main_menu_line_y += 10
+    else:
+        main_menu_line_y = 0
+        line_2_x = random.randrange(10, display_width-100)
+    
+
+    
+
+    pygame.draw.line(gameDisplay, white, (0, line_1_y), (main_menu_line_x, line_1_y), 10)
+    pygame.draw.line(gameDisplay, white, (line_2_x, 0), (line_2_x, main_menu_line_y), 10)
 
     # BLIT IMAGE
     gameDisplay.blit(image, (display_width-200, 50))
+    gameDisplay.blit(scaled_title, (display_width/2, 20))
 
     main_menu_sorting_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 200, main_menu_btn_width, 50])
     main_menu_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [main_menu_btn_x, 700, main_menu_btn_width, 50])
@@ -778,6 +1147,20 @@ def draw_glossary_buttons():
 
 
 
+
+def draw_rb_menu():
+
+    global add_node_btn, red_black_exit_btn
+
+    add_node_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 600, 150, 50])
+    add_node_text = small_font.render(str("Add Node"), False, black)
+    gameDisplay.blit(add_node_text, (display_width-165, 610))
+
+    red_black_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 700, 150, 50])
+    main_menu_text = small_font.render(str("Main menu"), False, black)
+    gameDisplay.blit(main_menu_text, (display_width-165, 710))
+
+
 # INITIAL SETUP
 
 list_for_sort = [random.randrange(0, 50) for i in range(0, 10)]
@@ -823,7 +1206,12 @@ while global_loop:
                         
                         pygame.mixer.Sound.play(btn_click_sound)
                         # # pygame.mixer.Sound.play(loaded_sound)
-                        
+
+
+                    if main_menu_red_black_trees_btn.collidepoint(pygame.mouse.get_pos()):
+                        main_menu_status = False
+                        red_black_mode = True
+                        pygame.mixer.Sound.play(btn_click_sound)
 
 
                     if main_menu_graph_btn.collidepoint(pygame.mouse.get_pos()):
@@ -1023,13 +1411,7 @@ while global_loop:
 
             # BUTTONS
 
-            add_node_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 600, 150, 50])
-            add_node_text = small_font.render(str("Add Node"), False, black)
-            gameDisplay.blit(add_node_text, (display_width-165, 610))
-
-            rb_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 700, 150, 50])
-            main_menu_text = small_font.render(str("Main menu"), False, black)
-            gameDisplay.blit(main_menu_text, (display_width-165, 710))
+            draw_rb_menu()
 
             blank = False
 
@@ -1088,6 +1470,54 @@ while global_loop:
                     if add_node_btn.collidepoint(pygame.mouse.get_pos()):
 
                         root.add_edge(cities[random.randrange(0, len(cities))], cities[random.randrange(0, len(cities))])
+
+        pygame.display.update()
+
+
+
+    rb_tree = RBTree()
+    blank = True
+    while red_black_mode:
+
+        if blank:
+
+            gameDisplay.fill(background_color)
+            
+            # BUTTONS
+
+            add_node_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 600, 150, 50])
+            add_node_text = small_font.render(str("Add Node"), False, black)
+            gameDisplay.blit(add_node_text, (display_width-165, 610))
+
+            red_black_exit_btn = pygame.draw.rect(gameDisplay, menu_button_color, [display_width-170, 700, 150, 50])
+            main_menu_text = small_font.render(str("Main menu"), False, black)
+            gameDisplay.blit(main_menu_text, (display_width-165, 710))
+
+            blank = False
+
+         # EVENT HANDLING
+            # event handling
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_exit = True
+                    pygame.quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if red_black_exit_btn.collidepoint(pygame.mouse.get_pos()):
+                        
+                        main_menu_status = True
+                        red_black_mode = False
+                        blank = True
+
+                    if add_node_btn.collidepoint(pygame.mouse.get_pos()):
+
+                        val = random.randrange(0, 200)
+                        
+                        rb_tree.insert(val)
+                        print(rb_tree)
+                        for i in range(5):
+                            print('\n')
+
 
         pygame.display.update()                                 
         
